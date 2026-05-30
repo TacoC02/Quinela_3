@@ -1,62 +1,54 @@
-import { useState, useEffect } from 'react';
-import './App.css'; // Mantenemos tus estilos base si los tienes
+import { useState } from 'react';
+import './App.css';
+import Register from './components/Register'
+import ParticipantCheck from './components/ParticipantCheck'
+import QuinielaBuilder from './components/QuinielaBuilder'
+import QuinielaView from './components/QuinielaView'
+import { LeaderboardTeam, LeaderboardGeneral } from './components/Leaderboards'
 
-// La interfaz de los datos (usando TypeScript)
-interface Partido {
-  id: string | number;
-  equipoLocal: string;
-  equipoVisitante: string;
-  estatus: string;
-}
-
-export default function App() {
-  const [partidos, setPartidos] = useState<Partido[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [cargando, setCargando] = useState<boolean>(true);
-
-  useEffect(() => {
-    const obtenerPartidos = async () => {
-      try {
-        // Hacemos la petición a tu API local
-        const respuesta = await fetch('http://localhost:4000/matches/bracket');
-        
-        if (!respuesta.ok) {
-          throw new Error('Error al conectar: Revisa si el backend está encendido y tiene CORS configurado.');
-        }
-        
-        const datos = await respuesta.json();
-        setPartidos(datos);
-        
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setCargando(false);
-      }
-    };
-
-    obtenerPartidos();
-  }, []);
-
-  if (cargando) return <h2>Cargando la quiniela...</h2>;
-  
-  if (error) return (
-    <div style={{ color: 'red', padding: '20px' }}>
-      <h1>🏆 Quiniela del Mundial 🏆</h1>
-      <h2>TEAM-ROCKET</h2>
-      <button>Añadir usario</button>
-    </div>
-  );
+export default function App(){
+  const [token, setToken] = useState<string | null>(null)
+  const [participant, setParticipant] = useState<any|null>(null)
+  const [view, setView] = useState<'home'|'check'|'builder'|'view'|'leaderboards'>('home')
 
   return (
-    <div className="contenedor-principal">
-    
-      <ul>
-        {partidos.map((partido, index) => (
-          <li key={partido.id || index}>
-            {partido.equipoLocal} vs {partido.equipoVisitante} 
-          </li>
-        ))}
-      </ul>
+    <div className="contenedor-principal" style={{padding:20}}>
+      <h1>🏆 Quiniela del Mundial</h1>
+      <nav style={{marginBottom:12}}>
+        <button onClick={()=>setView('home')}>Inicio</button>
+        <button onClick={()=>setView('check')}>Ver participantes</button>
+        <button onClick={()=>setView('leaderboards')}>Leaderboards</button>
+      </nav>
+
+      {view==='home' && (
+        <div>
+          <p>Registra un participante con el token de equipo provisto por la organización.</p>
+          <Register onRegistered={(p,t)=>{ setParticipant(p); setToken(t); setView('builder') }} />
+        </div>
+      )}
+
+      {view==='check' && token && (
+        <ParticipantCheck token={token} onSelect={(p)=>{ setParticipant(p); setView(p.quinielaSubmitted? 'view':'builder') }} />
+      )}
+
+      {view==='builder' && token && participant && (
+        <QuinielaBuilder token={token} participant={participant} />
+      )}
+
+      {view==='view' && token && participant && (
+        <QuinielaView token={token} participantId={participant.idParticipant} />
+      )}
+
+      {view==='leaderboards' && token && (
+        <div>
+          <LeaderboardTeam token={token} />
+          <LeaderboardGeneral token={token} />
+        </div>
+      )}
+
+      {!token && view!=='home' && (
+        <div style={{color:'orange'}}>Introduce un token desde la pantalla de inicio para usar estas vistas.</div>
+      )}
     </div>
-  );
+  )
 }
