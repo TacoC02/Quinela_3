@@ -237,3 +237,6 @@ body{
   .bracket-layout{grid-template-columns:1fr;}
 }
 
+h2 {
+  color: wheat
+}
