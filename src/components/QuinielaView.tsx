@@ -19,7 +19,7 @@ export default function QuinielaView({ token, participantId }:{ token:string, pa
     <div>
       <h2>Quiniela de {data.participant?.name}</h2>
       <div>Score: {data.score}</div>
-      {data.bracket.map((stage:any)=>(
+      {data.bracket.filter((stage:any)=>stage.stage !== 'tercer_lugar').map((stage:any)=>(
         <div key={stage.stage} style={{marginBottom:12}}>
           <h4>{stage.stage}</h4>
           <ul>

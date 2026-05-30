@@ -3,7 +3,7 @@ import api from '../api'
 
 export default function Register({ onRegistered }: { onRegistered: (participant: any, token: string) => void }) {
   const [name, setName] = useState('')
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState('TEAM-ROCKET')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<any | null>(null)
 
@@ -31,7 +31,7 @@ export default function Register({ onRegistered }: { onRegistered: (participant:
       <form onSubmit={submit}>
         <div>
           <label>Token de equipo</label>
-          <input value={token} onChange={e=>setToken(e.target.value)} placeholder="TEAM-TOKEN-001" required />
+          <input value={token} disabled title="Token fijado: TEAM-ROCKET" />
         </div>
         <div>
           <label>Nombre</label>

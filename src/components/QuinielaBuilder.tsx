@@ -38,7 +38,6 @@ export default function QuinielaBuilder({ token, participant }: { token: string;
     9: [1,2], 10: [3,4], 11: [5,6], 12: [7,8],
     13: [9,10], 14: [11,12],
     16: [13,14], // final
-    15: [13,14], // tercer lugar (losers of 13 & 14)
   }
 
   function resolveMatchTeams(m: any, orderMap: Record<number, any>) {
@@ -48,16 +47,7 @@ export default function QuinielaBuilder({ token, participant }: { token: string;
     const feedersFor = feeders[m.matchOrder]
     if (!feedersFor) return { homeTeam: null, awayTeam: null }
 
-    // For third place (order 15) we want losers of semifinals
-    if (m.matchOrder === 15) {
-      const semiA = orderMap[13]
-      const semiB = orderMap[14]
-      const loserA = getLoserOfMatch(semiA)
-      const loserB = getLoserOfMatch(semiB)
-      return { homeTeam: loserA, awayTeam: loserB }
-    }
-
-    // For other rounds use winners of feeder matches
+    // For rounds use winners of feeder matches
     const t1 = orderMap[feedersFor[0]]
     const t2 = orderMap[feedersFor[1]]
     const winner1 = getWinnerOfMatch(t1)
@@ -110,7 +100,7 @@ export default function QuinielaBuilder({ token, participant }: { token: string;
   return (
     <div>
       <h2>Crear Quiniela — {participant.name}</h2>
-      {bracket.map((stage:any)=>(
+      {bracket.filter((stage:any)=>stage.stage !== 'tercer_lugar').map((stage:any)=>(
         <div key={stage.stage} style={{marginBottom:16}}>
           <h4>{stage.stage}</h4>
           <ul>

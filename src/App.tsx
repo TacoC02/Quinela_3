@@ -7,7 +7,8 @@ import QuinielaView from './components/QuinielaView'
 import { LeaderboardTeam, LeaderboardGeneral } from './components/Leaderboards'
 
 export default function App(){
-  const [token, setToken] = useState<string | null>(null)
+  // El token de equipo está fijado a TEAM-ROCKET por defecto
+  const [token, setToken] = useState<string | null>('TEAM-ROCKET')
   const [participant, setParticipant] = useState<any|null>(null)
   const [view, setView] = useState<'home'|'check'|'builder'|'view'|'leaderboards'>('home')
 
