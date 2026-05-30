@@ -3,7 +3,7 @@ import api from '../api'
 
 export default function Register({ onRegistered }: { onRegistered: (participant: any, token: string) => void }) {
   const [name, setName] = useState('')
-  const [token, setToken] = useState('TEAM-ROCKET')
+  const token = 'TEAM-ROCKET'
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<any | null>(null)
 

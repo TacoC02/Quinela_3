@@ -65,17 +65,7 @@ export default function QuinielaBuilder({ token, participant }: { token: string;
     return null
   }
 
-  function getLoserOfMatch(match: any) {
-    if (!match) return null
-    const sel = selections[match.idMatch]
-    // if selection made, loser is the other team
-    if (sel && match.homeTeam && match.awayTeam) {
-      if (match.homeTeam.idFootballTeam === sel) return match.awayTeam
-      if (match.awayTeam.idFootballTeam === sel) return match.homeTeam
-    }
-    // if no selection, cannot determine
-    return null
-  }
+  // removed getLoserOfMatch to avoid unused symbol; third place no longer supported
 
   function togglePick(matchId:number, teamId:number){
     setSelections(s=>({ ...s, [matchId]: s[matchId]===teamId? undefined as any : teamId }))
