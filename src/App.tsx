@@ -10,7 +10,7 @@ export default function App(){
   // El token de equipo está fijado a TEAM-ROCKET por defecto
   const [token, setToken] = useState<string | null>('TEAM-ROCKET')
   const [participant, setParticipant] = useState<any|null>(null)
-  const [view, setView] = useState<'home'|'check'|'builder'|'view'|'leaderboards'>('home')
+  const [view, setView] = useState<'home'|'check'|'builder'|'view'|'leaderboards-team'|'leaderboards-global'>('home')
 
   return (
     <div className="contenedor-principal" style={{padding:20}}>
@@ -18,7 +18,8 @@ export default function App(){
       <nav style={{marginBottom:12}}>
         <button onClick={()=>setView('home')}>Inicio</button>
         <button onClick={()=>setView('check')}>Ver participantes</button>
-        <button onClick={()=>setView('leaderboards')}>Leaderboards</button>
+        <button onClick={()=>setView('leaderboards-team')}>Leaderboards (Equipo)</button>
+        <button onClick={()=>setView('leaderboards-global')}>Leaderboards (Global)</button>
       </nav>
 
       {view==='home' && (
@@ -40,10 +41,15 @@ export default function App(){
         <QuinielaView token={token} participantId={participant.idParticipant} />
       )}
 
-      {view==='leaderboards' && token && (
+      {view==='leaderboards-team' && token && (
         <div>
           <LeaderboardTeam token={token} />
-          <LeaderboardGeneral token={token} />
+        </div>
+      )}
+
+      {view==='leaderboards-global' && (
+        <div>
+          <LeaderboardGeneral token={token || undefined} />
         </div>
       )}
 
